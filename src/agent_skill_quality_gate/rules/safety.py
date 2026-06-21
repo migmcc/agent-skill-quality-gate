@@ -34,14 +34,16 @@ SHELL_RISK_PATTERNS = [
     (r"\beval\s*\(", "Dynamic code execution (`eval(`)."),
 ]
 
-_CODE_BLOCK_RE = re.compile(r"```.*?```", re.DOTALL)
-_INLINE_CODE_RE = re.compile(r"`[^`]+`")
-
-
 def _scan_targets(skill):
-    """Concatenate code blocks + inline code + body for pattern scanning."""
-    text = skill.raw or skill.body or ""
-    return text
+    """Return the text scanned for unsafe patterns.
+
+    The scan is intentionally **whole-file**: the entire raw `SKILL.md`
+    (frontmatter + prose + code blocks + inline code) is matched against the
+    deny-list. This is the conservative choice — a dangerous command is flagged
+    wherever it appears, not only inside fenced code. As documented in
+    SECURITY.md, this check is a floor, not a guarantee.
+    """
+    return skill.raw or skill.body or ""
 
 
 def check(skill):
