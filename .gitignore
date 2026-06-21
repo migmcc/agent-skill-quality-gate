@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+
+# Tool output
+reports/
+!examples/**/reports/
+
+# Internal SkillLab build/audit artifacts — NOT for public publication
+# (contain internal process notes and local paths)
+BUILD_REPORT.md
+PRE_PUBLICATION_REPORT.md
+docs/reviews/
