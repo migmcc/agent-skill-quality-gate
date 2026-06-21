@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "agent-skill-quality-gate"
 version = "0.1.0"
-description = "Quality gate for AI agent skills — validates SKILL.md files for clarity, structure, safety, testability, duplication and publication readiness."
+description = "Quality gate for AI agent skills — validates SKILL.md files for clarity, structure, basic safety checks, documented tests, duplication and publication readiness."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
