@@ -32,6 +32,10 @@ SHELL_RISK_PATTERNS = [
     (r"--force\b", "Force flag used."),
     (r"verify\s*=\s*False", "TLS/SSL verification disabled."),
     (r"\beval\s*\(", "Dynamic code execution (`eval(`)."),
+    (
+        r"\b(?:cat|less|more|tail|head)\b[^\n;&|]*(?:^|\s)(?:[./\w-]*/)?\.env(?:[.\w-]*)?\b",
+        "Reads dotenv secret files (`cat .env`).",
+    ),
 ]
 
 def _scan_targets(skill):
