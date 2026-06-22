@@ -37,6 +37,12 @@ def test_shell_risk_detected(tmp_path):
     assert FindingCode.SHELL_RISK in codes_for(tmp_path)["risky"]
 
 
+def test_dotenv_read_detected_as_shell_risk(tmp_path):
+    text = GOOD_SKILL + "\n## Danger\n```\ncat .env.local\n```\n"
+    write_skill(tmp_path, "secret-reader", text)
+    assert FindingCode.SHELL_RISK in codes_for(tmp_path)["secret-reader"]
+
+
 def test_ambiguous_language_detected(tmp_path):
     vague = (
         "# vague\n\n## Purpose\nMaybe do things and stuff, etc. "
