@@ -140,7 +140,10 @@ def parse_skill_text(skill_id: str, text: str, path=None):
         if any(tok in low for tok in ("use when", "when ", "quando", "usar", "use this")):
             fields["trigger"] = desc
 
-    title = title or frontmatter.get("name") or skill_id
+    # Keep the display title independent from the path-qualified identifier.
+    # This also prevents directory prefixes from skewing duplication checks.
+    fallback_title = skill_id.rsplit("/", 1)[-1]
+    title = title or frontmatter.get("name") or fallback_title
 
     return Skill(
         id=skill_id,

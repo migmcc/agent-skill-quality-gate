@@ -1,6 +1,7 @@
 from conftest import GOOD_SKILL, write_skill
 
 from agent_skill_quality_gate.findings import FindingCode
+from agent_skill_quality_gate.models import Skill
 from agent_skill_quality_gate.rules import evaluate
 from agent_skill_quality_gate.scanner import scan_skills
 
@@ -70,7 +71,34 @@ def test_distinct_skills_not_flagged_as_duplicate(tmp_path):
     assert FindingCode.DUPLICATE_SCOPE not in codes["timer"]
 
 
-def test_missing_skill_file_flagged(tmp_path):
-    (tmp_path / "ghost").mkdir()
-    write_skill(tmp_path, "real", GOOD_SKILL)
-    assert FindingCode.MISSING_SKILL_FILE in codes_for(tmp_path)["ghost"]
+def test_explicit_missing_skill_file_is_flagged():
+    missing = Skill(id="ghost", path=None, title="ghost", exists=False)
+
+    findings = evaluate([missing])
+
+    assert FindingCode.MISSING_SKILL_FILE in {
+        finding.code for finding in findings["ghost"]
+    }
+
+
+def test_nested_skills_with_same_name_have_independent_findings(tmp_path):
+    write_skill(tmp_path, "team-a/repo-audit", GOOD_SKILL)
+    write_skill(tmp_path, "team-b/repo-audit", "# bare\n\n## Steps\nDo a thing.\n")
+
+    codes = codes_for(tmp_path)
+
+    assert codes["team-a/repo-audit"] == set()
+    assert FindingCode.MISSING_PURPOSE in codes["team-b/repo-audit"]
+
+
+def test_nested_identical_unnamed_skills_are_still_duplicates(tmp_path):
+    text = "## Purpose\nAudit.\n"
+    first = "sales-enablement/workflows/repo-audit"
+    second = "security-engineering/compliance/repo-audit"
+    write_skill(tmp_path, first, text)
+    write_skill(tmp_path, second, text)
+
+    codes = codes_for(tmp_path)
+
+    assert FindingCode.DUPLICATE_SCOPE in codes[first]
+    assert FindingCode.DUPLICATE_SCOPE in codes[second]
