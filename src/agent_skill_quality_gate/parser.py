@@ -153,5 +153,4 @@ def parse_skill_text(skill_id: str, text: str, path=None):
         fields=fields,
         body=body,
         raw=text,
-        exists=True,
     )

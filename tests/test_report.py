@@ -2,6 +2,7 @@ import json
 
 from conftest import GOOD_SKILL, write_skill
 
+from agent_skill_quality_gate import __version__
 from agent_skill_quality_gate.report import (
     render_json,
     render_markdown,
@@ -41,6 +42,13 @@ def test_json_is_deterministic(tmp_path):
     r1 = render_json(make_report(tmp_path))
     r2 = render_json(make_report(tmp_path))
     assert r1 == r2
+
+
+def test_json_reports_release_version(tmp_path):
+    data = json.loads(render_json(make_report(tmp_path)))
+
+    assert __version__ == "0.2.0"
+    assert data["version"] == __version__
 
 
 def test_terminal_summary_renders(tmp_path):

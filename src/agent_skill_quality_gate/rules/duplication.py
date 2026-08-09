@@ -1,7 +1,7 @@
 """Duplication rule: deterministic, no-AI scope overlap detection.
 
 Uses difflib.SequenceMatcher (stdlib) over normalized name+description+purpose.
-rapidfuzz (planned in architecture.md) is deferred; difflib keeps v0.1
+rapidfuzz (planned in architecture.md) is deferred; difflib keeps the package
 dependency-free while staying deterministic and explainable.
 """
 
@@ -37,7 +37,7 @@ def similarity(a, b):
 def check(skills):
     """Cross-skill rule. Returns findings attributed to each side of a pair."""
     findings = []
-    present = [s for s in skills if s.exists]
+    present = list(skills)
     sigs = {s.id: _signature(s) for s in present}
 
     for i in range(len(present)):

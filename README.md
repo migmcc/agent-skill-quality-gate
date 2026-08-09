@@ -13,7 +13,7 @@ merged or published.
 > ℹ️ The safety check is a deterministic deny-list heuristic — a *floor, not a
 > guarantee*, and it never executes the content it scans. See [SECURITY.md](SECURITY.md).
 >
-> CLI command: `skillgate`. Status: **v0.1 (alpha)**.
+> CLI command: `skillgate`. Status: **v0.2 (alpha)**.
 
 ---
 
@@ -39,6 +39,19 @@ skillgate scan ./examples --report reports/report.md --json reports/report.json
 
 A "skill" is any directory containing a `SKILL.md` file.
 
+### Migrating from v0.1
+
+Skill IDs in output are now paths relative to the scan root. For example, with
+`skillgate scan ./skills`:
+
+```text
+Before: repo-audit
+After:  team-a/repo-audit
+```
+
+This keeps nested skills with the same directory name distinct. Update stored
+reports, baselines, allowlists and other integrations keyed by skill ID.
+
 ### Example output
 
 ```
@@ -49,7 +62,7 @@ Average score: 65/100
 Verdict: WEAK
 
 Critical issues:
-- repo-audit: DUPLICATE_SCOPE
+- duplicate-skills/repo-audit: DUPLICATE_SCOPE
 - weak-skill: MISSING_PURPOSE
 - weak-skill: UNSAFE_INSTRUCTION
 
@@ -64,7 +77,7 @@ Gate: FAIL
 | Safety | `UNSAFE_INSTRUCTION`, `SHELL_RISK` |
 | Clarity | `AMBIGUOUS_LANGUAGE`, `OVERLY_VERBOSE`, `NO_TEST_CASES` |
 | Duplication | `DUPLICATE_SCOPE` |
-| Derived | `MISSING_SKILL_FILE`, `PUBLICATION_NOT_READY` |
+| Derived | `PUBLICATION_NOT_READY` |
 
 ## Scoring
 
@@ -120,11 +133,11 @@ pytest -q
 
 ## Roadmap
 
-- **v0.1** — scan, 13 rules, scoring, Markdown + minimal JSON, exit codes. *(current)*
-- **v0.2** — YAML config + custom rules, richer JSON, better duplication.
-- **v0.3** — GitHub Action + PR comments + fail-on-threshold.
-- **v0.4** — README badge, version comparison.
-- **v0.5** — more formats (`AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `.cursor/rules`).
+- **v0.1** — scan, 13 rules, scoring, Markdown + minimal JSON, exit codes.
+- **v0.2** — reliable skill discovery and path-qualified nested skill IDs. *(current)*
+- **Next** — YAML config, custom rules, richer JSON and better duplication.
+- **Later** — GitHub Action, PR comments, badges and version comparison.
+- **Future formats** — `AGENTS.md`, `CLAUDE.md`, `CODEX.md` and `.cursor/rules`.
 - **v1.0** — stable, extensible rule engine, full docs.
 
 ## Contributing
