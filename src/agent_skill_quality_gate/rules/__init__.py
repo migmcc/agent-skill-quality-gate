@@ -1,14 +1,11 @@
 """Rule engine: run all rules over a set of skills.
 
 13 distinct checks across structure (7), safety (2), clarity (3) and
-duplication (1), plus the derived MISSING_SKILL_FILE and PUBLICATION_NOT_READY
-markers.
+duplication (1), plus the derived PUBLICATION_NOT_READY marker.
 """
 
 from __future__ import annotations
 
-from ..findings import FindingCode, Severity
-from ..models import Finding
 from . import clarity, duplication, publication, safety, structure
 
 PER_SKILL_RULES = (structure.check, safety.check, clarity.check)
@@ -21,15 +18,6 @@ def evaluate(skills):
     findings_by_skill = {s.id: [] for s in skills}
 
     for skill in skills:
-        if not skill.exists:
-            findings_by_skill[skill.id].append(Finding(
-                code=FindingCode.MISSING_SKILL_FILE,
-                severity=Severity.CRITICAL,
-                message="No SKILL.md found in this skill directory.",
-                skill=skill.id,
-                blocking=True,
-            ))
-            continue
         for rule in PER_SKILL_RULES:
             findings_by_skill[skill.id].extend(rule(skill))
 

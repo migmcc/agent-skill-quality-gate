@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-skill-quality-gate"
-version = "0.1.0"
+version = "0.2.0"
 description = "Quality gate for AI agent skills — validates SKILL.md files for clarity, structure, basic safety checks, documented tests, duplication and publication readiness."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -18,7 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Topic :: Software Development :: Quality Assurance",
 ]
-# v0.1 is intentionally dependency-free (Python standard library only).
+# The package is intentionally dependency-free (Python standard library only).
 dependencies = []
 
 [project.optional-dependencies]

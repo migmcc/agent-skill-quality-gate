@@ -1,4 +1,4 @@
-"""Data models (stdlib dataclasses — no pydantic in v0.1)."""
+"""Data models (stdlib dataclasses — no pydantic dependency)."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
+from . import __version__
 from .findings import FindingCode, Severity, Verdict
 
 
@@ -34,7 +35,6 @@ class Skill:
     fields: dict = field(default_factory=dict)  # field name -> content str ("" if heading present but empty)
     body: str = ""
     raw: str = ""
-    exists: bool = True
 
     def has_field(self, name: str) -> bool:
         """True if the field is present with non-empty content."""
@@ -96,7 +96,7 @@ class ScanReport:
     def to_dict(self) -> dict:
         return {
             "tool": "agent-skill-quality-gate",
-            "version": "0.1.0",
+            "version": __version__,
             "skills_scanned": len(self.results),
             "average_score": self.average_score,
             "global_verdict": self.global_verdict.value,

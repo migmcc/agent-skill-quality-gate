@@ -3,4 +3,4 @@
 Deterministic, LLM-free, standard-library-only validator for SKILL.md files.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

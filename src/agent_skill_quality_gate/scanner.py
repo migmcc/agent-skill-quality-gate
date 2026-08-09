@@ -7,7 +7,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .models import Skill
 from .parser import parse_skill_text
 
 
@@ -23,35 +22,20 @@ def find_skill_files(root: Path):
 def scan_skills(root: Path):
     """Parse all skills under root.
 
-    A skill is identified by the name of the directory containing its
-    SKILL.md. Directories under root that contain no SKILL.md but look like
-    skill folders are reported as MISSING_SKILL_FILE via an empty Skill.
+    Only directories that contain a SKILL.md are treated as skills. A plain
+    directory is not enough evidence that a skill was intended; it may hold
+    auxiliary scripts, references, or assets.
     """
     root = Path(root)
     skills = []
-    seen_dirs = set()
 
     for path in find_skill_files(root):
         skill_dir = path.parent
-        seen_dirs.add(skill_dir.resolve())
-        skill_id = skill_dir.name if skill_dir != root else (root.name or "root")
+        if skill_dir == root:
+            skill_id = root.name or "root"
+        else:
+            skill_id = skill_dir.relative_to(root).as_posix()
         text = path.read_text(encoding="utf-8")
         skills.append(parse_skill_text(skill_id, text, path=path))
-
-    # Detect immediate child directories that declare themselves as skills
-    # (they exist) but contain no SKILL.md at all.
-    if root.is_dir():
-        for child in sorted(root.iterdir(), key=lambda p: p.name.lower()):
-            if not child.is_dir():
-                continue
-            if child.resolve() in seen_dirs:
-                continue
-            has_skill_md = any(
-                p.name.lower() == "skill.md" for p in child.rglob("*") if p.is_file()
-            )
-            if not has_skill_md:
-                skills.append(
-                    Skill(id=child.name, path=child, title=child.name, exists=False)
-                )
 
     return sorted(skills, key=lambda s: s.id.lower())
