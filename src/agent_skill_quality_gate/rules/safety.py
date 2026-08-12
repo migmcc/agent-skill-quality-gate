@@ -33,7 +33,8 @@ SHELL_RISK_PATTERNS = [
     (r"verify\s*=\s*False", "TLS/SSL verification disabled."),
     (r"\beval\s*\(", "Dynamic code execution (`eval(`)."),
     (
-        r"\b(?:cat|less|more|tail|head)\b[^\n;&|]*(?:^|\s)(?:[./\w-]*/)?\.env(?:[.\w-]*)?\b",
+        r"(?m)(?:^|[`|;]\s*)[\s$>#]*(?:cat|less|more|tail|head)\b[^\n;&|]*\s"
+        r"(?:[./\w-]*/)?\.env(?!\.(?:example|sample|template|dist)\b)(?:[.\w-]*)?\b",
         "Reads dotenv secret files (`cat .env`).",
     ),
 ]
