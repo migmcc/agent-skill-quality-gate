@@ -1,4 +1,39 @@
-# agent-skill-quality-gate
+# Agent Skill Quality Gate
+
+### Find documentation, structure and safety-heuristic issues in AI agent skills before publication.
+
+A **deterministic, local-first CLI** for checking `SKILL.md` files. It reports missing requirements, ambiguity, duplicated scope and suspicious shell instructions; results can be consumed by humans or CI.
+
+**[Try it](#quickstart-under-5-minutes)** · **[See the example](#example-output)** · **[Rules](#what-it-checks-13-rules)** · **[Security boundaries](SECURITY.md)**
+
+> **Not a security scanner or guarantee.** Shell-risk checks use a deterministic heuristic. The tool does not execute scanned instructions. Current status: **v0.1 (alpha)**.
+
+## Why it exists
+
+Agent skills often become hard to review as their number grows. A repeatable gate helps contributors identify unclear purpose, missing inputs and outputs, absent tests, risky instruction patterns and near-duplicates before merging them.
+
+```text
+Folder of SKILL.md files
+          ↓
+    Document checks
+          ↓
+  Findings + score + gate
+          ↓
+  Markdown / JSON reports
+```
+
+## Example output
+
+The repository includes sample skill directories; the documented output below is illustrative:
+
+```text
+Skills scanned: 4
+Average score: 65/100
+Verdict: WEAK
+Gate: FAIL
+```
+
+---
 
 **Quality gate for AI agent skills.** A deterministic, local-first CLI that
 validates `SKILL.md` files for clarity, structure, basic safety checks,
